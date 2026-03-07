@@ -1,0 +1,46 @@
+# Core Dependencies
+streamlit>=1.55.0
+streamlit-option-menu>=0.3.0
+numpy>=2.4.0
+pandas>=2.3.0
+scikit-learn>=1.8.0
+scipy>=1.17.0
+
+# NLP Libraries
+nltk>=3.9.0
+spacy>=3.8.0
+sentence-transformers>=5.2.0
+
+# Document Processing
+PyPDF2>=3.0.0
+python-docx>=1.2.0
+reportlab>=4.0.0
+
+# Visualization
+plotly>=6.6.0
+
+# Utilities
+tqdm>=4.67.0
+joblib>=1.5.0
+python-dotenv>=1.0.0
+
+# Configuration & Validation
+pydantic>=2.12.0
+pydantic-settings>=2.0.0
+
+# API & HTTP
+httpx>=0.28.0
+requests>=2.32.0
+tenacity>=9.1.0
+feedparser>=6.0.0
+openai>=2.0.0
+
+# Development Dependencies (optional)
+pytest>=8.0.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.23.0
+pytest-mock>=3.12.0
+black>=24.0.0
+ruff>=0.3.0
+mypy>=1.9.0
+pre-commit>=3.6.0
