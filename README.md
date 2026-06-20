@@ -57,9 +57,7 @@ That's it! The app will start immediately.
 **Optional (Enhanced Features):**
 - 🔗 **CrossRef API** - DOI validation & citations
 
-**📖 Quick Start:** See [QUICK_START_APIS.md](QUICK_START_APIS.md)  
-**📚 Full Guide:** See [API_INTEGRATION_GUIDE.md](API_INTEGRATION_GUIDE.md)  
-**🏗️ Architecture:** See [API_ARCHITECTURE.md](API_ARCHITECTURE.md)
+
 
 **Note:** All APIs are FREE! No paid services required.
 
