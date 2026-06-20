@@ -10,52 +10,47 @@ from typing import Dict, List, Any, Optional
 
 
 class LanguageToolClient:
-
     def __init__(self, language: str = "en-US"):
-
         self.base_url = "https://api.languagetoolplus.com/v2/check"
 
         self.language = language
 
         self.session = requests.Session()
 
-        self.session.headers.update({
-            "User-Agent": "AI-Research-Intelligence-System/1.0",
-            "Content-Type": "application/x-www-form-urlencoded"
-        })
+        self.session.headers.update(
+            {
+                "User-Agent": "AI-Research-Intelligence-System/1.0",
+                "Content-Type": "application/x-www-form-urlencoded",
+            }
+        )
 
     def _empty_result(self, error_message: str):
-
         return {
             "success": False,
             "error": error_message,
             "corrections": [],
             "suggestions": [],
             "error_types": {},
-            "total_errors": 0
+            "total_errors": 0,
         }
 
-    def check_text(self, text: str, additional_rules: Optional[List[str]] = None) -> Dict[str, Any]:
-
+    def check_text(
+        self, text: str, additional_rules: Optional[List[str]] = None
+    ) -> Dict[str, Any]:
         if not text or not text.strip():
             return self._empty_result("Input text is empty")
 
         try:
-
             data = {
                 "text": text,
                 "language": self.language,
-                "enabledOnly": "false"
+                "enabledOnly": "false",
             }
 
             if additional_rules:
                 data["enabledRules"] = ",".join(additional_rules)
 
-            response = self.session.post(
-                self.base_url,
-                data=data,
-                timeout=10
-            )
+            response = self.session.post(self.base_url, data=data, timeout=10)
 
             response.raise_for_status()
 
@@ -68,7 +63,6 @@ class LanguageToolClient:
             error_types: Dict[str, int] = {}
 
             for match in matches:
-
                 rule = match.get("rule", {})
 
                 correction = {
@@ -85,7 +79,7 @@ class LanguageToolClient:
                     "rule_id": rule.get("id", ""),
                     "category": rule.get("category", {}).get("name", ""),
                     "type": rule.get("issueType", ""),
-                    "severity": rule.get("isPremium", False)
+                    "severity": rule.get("isPremium", False),
                 }
 
                 corrections.append(correction)
@@ -100,15 +94,16 @@ class LanguageToolClient:
                 original_text = ""
 
                 if offset < len(text):
-                    original_text = text[offset: offset + length]
+                    original_text = text[offset : offset + length]
 
                 if correction["replacements"]:
-
-                    suggestions.append({
-                        "original": original_text,
-                        "suggestions": correction["replacements"][:3],
-                        "reason": correction["message"]
-                    })
+                    suggestions.append(
+                        {
+                            "original": original_text,
+                            "suggestions": correction["replacements"][:3],
+                            "reason": correction["message"],
+                        }
+                    )
 
             return {
                 "success": True,
@@ -117,30 +112,25 @@ class LanguageToolClient:
                 "error_types": error_types,
                 "total_errors": len(corrections),
                 "premium_errors": len([c for c in corrections if c["severity"]]),
-                "free_errors": len([c for c in corrections if not c["severity"]])
+                "free_errors": len([c for c in corrections if not c["severity"]]),
             }
 
         except requests.exceptions.RequestException as e:
-
             logging.error(f"LanguageTool network error: {str(e)}")
-
             return self._empty_result(str(e))
 
         except Exception as e:
-
             logging.exception("Unexpected LanguageTool error")
-
             return self._empty_result(str(e))
 
     def get_academic_style_suggestions(self, text: str) -> Dict[str, Any]:
-
         academic_rules = [
             "PASSIVE_VOICE",
             "WORDINESS",
             "REDUNDANCY",
             "FORMALITY",
             "COMMA_PARENTHESIS_WHITESPACE",
-            "EN_QUOTES"
+            "EN_QUOTES",
         ]
 
         result = self.check_text(text, academic_rules)
@@ -155,16 +145,14 @@ class LanguageToolClient:
             "GRAMMAR",
             "STYLE",
             "TYPOGRAPHY",
-            "PUNCTUATION"
+            "PUNCTUATION",
         ]
 
         for correction in result["corrections"]:
-
             if correction["category"] in academic_categories:
                 academic_corrections.append(correction)
 
         for suggestion in result["suggestions"]:
-
             if any(
                 keyword in suggestion["reason"].upper()
                 for keyword in ["PASSIVE", "INFORMAL", "WORDY"]
@@ -184,11 +172,10 @@ class LanguageToolClient:
             "academic_score": round(academic_score, 1),
             "total_words": total_words,
             "error_ratio": round(error_ratio, 3),
-            "needs_improvement": academic_score < 80
+            "needs_improvement": academic_score < 80,
         }
 
     def check_citations(self, text: str) -> Dict[str, Any]:
-
         result = self.check_text(text)
 
         if not result["success"]:
@@ -197,12 +184,12 @@ class LanguageToolClient:
         citation_issues = []
 
         for correction in result["corrections"]:
-
             message = correction["message"].lower()
 
-            if any(keyword in message for keyword in
-                   ["citation", "reference", "parenthesis", "quote"]):
-
+            if any(
+                keyword in message
+                for keyword in ["citation", "reference", "parenthesis", "quote"]
+            ):
                 citation_issues.append(correction)
 
         apa_matches = re.findall(r"\([A-Za-z]+,?\s*\d{4}\)", text)
@@ -217,13 +204,12 @@ class LanguageToolClient:
             "detected_patterns": {
                 "apa": apa_matches,
                 "ieee": ieee_matches,
-                "mla": mla_matches
+                "mla": mla_matches,
             },
-            "total_citations": len(apa_matches) + len(ieee_matches) + len(mla_matches)
+            "total_citations": len(apa_matches) + len(ieee_matches) + len(mla_matches),
         }
 
     def get_readability_analysis(self, text: str) -> Dict[str, Any]:
-
         sentences = [s for s in text.split(".") if s.strip()]
 
         words = text.split()
@@ -238,7 +224,9 @@ class LanguageToolClient:
 
         avg_word_length = num_chars / max(num_words, 1)
 
-        readability_score = 206.835 - (1.015 * avg_sentence_length) - (84.6 * avg_word_length)
+        readability_score = 206.835 - (1.015 * avg_sentence_length) - (
+            84.6 * avg_word_length
+        )
 
         return {
             "success": True,
@@ -248,17 +236,15 @@ class LanguageToolClient:
                 "character_count": num_chars,
                 "avg_sentence_length": round(avg_sentence_length, 1),
                 "avg_word_length": round(avg_word_length, 1),
-                "readability_score": round(readability_score, 1)
+                "readability_score": round(readability_score, 1),
             },
             "readability_level": self._get_readability_level(readability_score),
             "suggestions": self._get_readability_suggestions(
-                avg_sentence_length,
-                avg_word_length
-            )
+                avg_sentence_length, avg_word_length
+            ),
         }
 
     def _get_readability_level(self, score: float) -> str:
-
         if score >= 90:
             return "Very Easy"
 
@@ -280,11 +266,8 @@ class LanguageToolClient:
         return "Very Difficult"
 
     def _get_readability_suggestions(
-        self,
-        avg_sentence_length: float,
-        avg_word_length: float
+        self, avg_sentence_length: float, avg_word_length: float
     ) -> List[str]:
-
         suggestions = []
 
         if avg_sentence_length > 20:

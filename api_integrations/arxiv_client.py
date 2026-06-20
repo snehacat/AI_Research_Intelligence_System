@@ -1,6 +1,6 @@
 """
 arXiv API Client - Free Research Paper Database Access
-Rate Limit: Unlimited 
+Rate Limit: Unlimited
 """
 
 import requests
@@ -18,9 +18,7 @@ logger = logging.getLogger(__name__)
 
 
 class ArxivClient:
-
     def __init__(self):
-
         self.base_url = "https://export.arxiv.org/api/query"
 
         self.session = requests.Session()
@@ -28,7 +26,7 @@ class ArxivClient:
         retry_strategy = Retry(
             total=3,
             backoff_factor=1,
-            status_forcelist=[429, 500, 502, 503, 504]
+            status_forcelist=[429, 500, 502, 503, 504],
         )
 
         adapter = HTTPAdapter(max_retries=retry_strategy)
@@ -36,17 +34,13 @@ class ArxivClient:
         self.session.mount("https://", adapter)
         self.session.mount("http://", adapter)
 
-        self.session.headers.update({
-            "User-Agent": "AI-Research-Intelligence-System/1.0"
-        })
+        self.session.headers.update(
+            {"User-Agent": "AI-Research-Intelligence-System/1.0"}
+        )
 
     def search_papers(
-        self,
-        query: str,
-        max_results: int = 10,
-        sort_by: str = "relevance"
+        self, query: str, max_results: int = 10, sort_by: str = "relevance"
     ) -> List[Dict]:
-
         """
         Search for papers on arXiv
         """
@@ -57,20 +51,15 @@ class ArxivClient:
         max_results = min(max_results, 100)
 
         try:
-
             params = {
                 "search_query": query,
                 "start": 0,
                 "max_results": max_results,
                 "sortBy": sort_by,
-                "sortOrder": "descending"
+                "sortOrder": "descending",
             }
 
-            response = self.session.get(
-                self.base_url,
-                params=params,
-                timeout=10
-            )
+            response = self.session.get(self.base_url, params=params, timeout=10)
 
             response.raise_for_status()
 
@@ -81,7 +70,6 @@ class ArxivClient:
             entries = getattr(feed, "entries", [])
 
             for entry in entries:
-
                 paper = {
                     "id": self._extract_arxiv_id(getattr(entry, "id", "")),
                     "title": getattr(entry, "title", "").replace("\n", " ").strip(),
@@ -99,7 +87,7 @@ class ArxivClient:
                         link.href
                         for link in getattr(entry, "links", [])
                         if hasattr(link, "href")
-                    ]
+                    ],
                 }
 
                 papers.append(paper)
@@ -107,23 +95,19 @@ class ArxivClient:
             return papers
 
         except requests.exceptions.RequestException as e:
-
             logger.error(f"Network error while querying arXiv: {str(e)}")
             return []
 
         except Exception:
-
             logger.exception("Unexpected arXiv search error")
             return []
 
     def get_paper_by_id(self, arxiv_id: str) -> Dict[str, Any]:
-
         """
         Get paper details by arXiv ID
         """
 
         try:
-
             query = f"id:{arxiv_id}"
 
             papers = self.search_papers(query, max_results=1)
@@ -134,35 +118,20 @@ class ArxivClient:
             return {"error": f"Paper with ID {arxiv_id} not found"}
 
         except Exception as e:
-
             logger.error(f"Get paper by ID error: {str(e)}")
             return {"error": str(e)}
 
-    def search_by_author(
-        self,
-        author_name: str,
-        max_results: int = 10
-    ) -> List[Dict]:
-
+    def search_by_author(self, author_name: str, max_results: int = 10) -> List[Dict]:
         query = f"au:{author_name}"
         return self.search_papers(query, max_results)
 
-    def search_by_category(
-        self,
-        category: str,
-        max_results: int = 10
-    ) -> List[Dict]:
-
+    def search_by_category(self, category: str, max_results: int = 10) -> List[Dict]:
         query = f"cat:{category}"
         return self.search_papers(query, max_results)
 
     def search_recent_papers(
-        self,
-        category: str = "",
-        days_back: int = 7,
-        max_results: int = 20
+        self, category: str = "", days_back: int = 7, max_results: int = 20
     ) -> List[Dict]:
-
         end_date = datetime.now()
         start_date = end_date - timedelta(days=days_back)
 
@@ -179,90 +148,106 @@ class ArxivClient:
         return self.search_papers(query, max_results, sort_by="submittedDate")
 
     def get_categories(self) -> Dict[str, List[str]]:
-
         return {
             "Computer Science": [
-                "cs.AI", "cs.CL", "cs.CV", "cs.LG", "cs.ML",
-                "cs.NE", "cs.CR", "cs.DS", "cs.DB", "cs.IR"
+                "cs.AI",
+                "cs.CL",
+                "cs.CV",
+                "cs.LG",
+                "cs.ML",
+                "cs.NE",
+                "cs.CR",
+                "cs.DS",
+                "cs.DB",
+                "cs.IR",
             ],
             "Mathematics": [
-                "math.AG", "math.AT", "math.CA", "math.CO",
-                "math.CV", "math.DG", "math.DS", "math.FA"
+                "math.AG",
+                "math.AT",
+                "math.CA",
+                "math.CO",
+                "math.CV",
+                "math.DG",
+                "math.DS",
+                "math.FA",
             ],
             "Physics": [
-                "physics.comp-ph", "physics.data-an",
-                "physics.app-ph", "cond-mat.stat-mech",
-                "quant-ph", "hep-th", "astro-ph"
+                "physics.comp-ph",
+                "physics.data-an",
+                "physics.app-ph",
+                "cond-mat.stat-mech",
+                "quant-ph",
+                "hep-th",
+                "astro-ph",
             ],
             "Quantitative Biology": [
-                "q-bio.BM", "q-bio.CB", "q-bio.GN",
-                "q-bio.MN", "q-bio.NC", "q-bio.QM"
+                "q-bio.BM",
+                "q-bio.CB",
+                "q-bio.GN",
+                "q-bio.MN",
+                "q-bio.NC",
+                "q-bio.QM",
             ],
             "Quantitative Finance": [
-                "q-fin.CP", "q-fin.EC", "q-fin.GN",
-                "q-fin.MF", "q-fin.PM", "q-fin.RM"
+                "q-fin.CP",
+                "q-fin.EC",
+                "q-fin.GN",
+                "q-fin.MF",
+                "q-fin.PM",
+                "q-fin.RM",
             ],
             "Statistics": [
-                "stat.ML", "stat.ME", "stat.TH",
-                "stat.AP", "stat.CO"
-            ]
+                "stat.ML",
+                "stat.ME",
+                "stat.TH",
+                "stat.AP",
+                "stat.CO",
+            ],
         }
 
     def _extract_arxiv_id(self, url: str) -> str:
-
-        match = re.search(r"arxiv\.org\/abs\/(([\w\.\-]+))", url)
+        match = re.search(r"arxiv\.org/abs/((([\w\.\-]+))", url)
 
         if match:
-
             arxiv_id = match.group(1)
             return arxiv_id.split("v")[0]
 
         return url
 
     def _extract_authors(self, authors: List) -> List[str]:
-
         return [
-            getattr(author, "name", "")
-            for author in authors
+            getattr(author, "name", "") for author in authors
             if getattr(author, "name", "")
         ]
 
     def _extract_categories(self, entry) -> List[str]:
-
         categories = []
 
         if hasattr(entry, "tags"):
-
             for tag in entry.tags:
-
                 if hasattr(tag, "term"):
                     categories.append(tag.term)
 
         return categories
 
     def _extract_primary_category(self, entry) -> str:
-
         if hasattr(entry, "arxiv_primary_category"):
             return getattr(entry.arxiv_primary_category, "term", "")
 
         return ""
 
     def _extract_doi(self, entry) -> str:
-
         if hasattr(entry, "doi"):
             return entry.doi
 
         for link in getattr(entry, "links", []):
-
             if hasattr(link, "href") and "doi.org" in link.href:
                 return link.href.replace("https://doi.org/", "")
 
         return ""
 
     def _extract_pdf_url(self, entry) -> str:
-
         for link in getattr(entry, "links", []):
-
             if hasattr(link, "href") and (
                 "/pdf/" in link.href or link.href.endswith(".pdf")
             ):
@@ -271,9 +256,7 @@ class ArxivClient:
         return ""
 
     def get_paper_statistics(self, query: str) -> Dict[str, Any]:
-
         try:
-
             papers = self.search_papers(query, max_results=100)
 
             if not papers:
@@ -283,12 +266,8 @@ class ArxivClient:
             years_count: Dict[str, int] = {}
 
             for paper in papers:
-
                 for category in paper.get("categories", []):
-
-                    categories_count[category] = (
-                        categories_count.get(category, 0) + 1
-                    )
+                    categories_count[category] = categories_count.get(category, 0) + 1
 
                 published = paper.get("published")
 
@@ -303,11 +282,12 @@ class ArxivClient:
                 "total_papers": len(papers),
                 "categories_distribution": categories_count,
                 "years_distribution": years_count,
-                "avg_authors_per_paper":
-                    sum(len(p.get("authors", [])) for p in papers) / len(papers)
+                "avg_authors_per_paper": sum(
+                    len(p.get("authors", [])) for p in papers
+                )
+                / len(papers),
             }
 
         except Exception as e:
-
             logger.error(f"Statistics error: {str(e)}")
             return {"error": str(e)}

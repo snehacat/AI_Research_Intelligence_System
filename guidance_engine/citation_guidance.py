@@ -36,14 +36,23 @@ class CitationGuidance:
             Dictionary containing total citations and long sentences missing citations
         """
         try:
-            sentences = [s.strip() for s in re.split(self.sentence_split_pattern, text) if s.strip()]
+            sentences = [
+                s.strip()
+                for s in re.split(self.sentence_split_pattern, text)
+                if s.strip()
+            ]
             total_sentences = len(sentences)
-            long_sentences = [s for s in sentences if len(s.split()) >= self.long_sentence_threshold]
+            long_sentences = [
+                s
+                for s in sentences
+                if len(s.split()) >= self.long_sentence_threshold
+            ]
 
             missing_citations = 0
             for sentence in long_sentences:
-                if not re.search(self.apa_pattern, sentence) and \
-                   not re.search(self.ieee_pattern, sentence):
+                if not re.search(self.apa_pattern, sentence) and not re.search(
+                    self.ieee_pattern, sentence
+                ):
                     missing_citations += 1
 
             apa_citations = len(re.findall(self.apa_pattern, text))
@@ -57,7 +66,9 @@ class CitationGuidance:
                 "apa_citations": apa_citations,
                 "ieee_citations": ieee_citations,
                 "year_mentions": year_mentions,
-                "missing_ratio": float(missing_citations / max(len(long_sentences), 1))
+                "missing_ratio": float(
+                    missing_citations / max(len(long_sentences), 1)
+                ),
             }
 
         except Exception as e:
@@ -69,7 +80,7 @@ class CitationGuidance:
                 "apa_citations": 0,
                 "ieee_citations": 0,
                 "year_mentions": 0,
-                "missing_ratio": 0.0
+                "missing_ratio": 0.0,
             }
 
     def generate_guidance(self, analysis: Dict[str, Union[int, float]]) -> List[str]:
@@ -193,6 +204,8 @@ class CitationGuidance:
 
         except Exception as e:
             logging.error(f"Error generating citation guidance: {str(e)}")
-            guidance.append("❌ Unable to generate citation guidance. Please check your document.")
+            guidance.append(
+                "❌ Unable to generate citation guidance. Please check your document."
+            )
 
         return guidance

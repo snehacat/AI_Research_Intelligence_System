@@ -13,7 +13,6 @@ logging.basicConfig(level=logging.INFO)
 
 
 class OpenAIClient:
-
     def __init__(self, api_key: Optional[str] = None):
         """
         Initialize OpenAI Client
@@ -22,7 +21,9 @@ class OpenAIClient:
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
 
         if not self.api_key:
-            logging.warning("OpenAI API key not found. Set OPENAI_API_KEY environment variable.")
+            logging.warning(
+                "OpenAI API key not found. Set OPENAI_API_KEY environment variable."
+            )
         else:
             openai.api_key = self.api_key
 
@@ -37,7 +38,13 @@ class OpenAIClient:
     # Core Chat Request Function
     # ---------------------------------------------------------
 
-    def _chat_request(self, system_prompt: str, user_prompt: str, max_tokens: int = 1000, temperature: float = 0.5) -> str:
+    def _chat_request(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        max_tokens: int = 1000,
+        temperature: float = 0.5,
+    ) -> str:
         """
         Centralized function to send request to OpenAI
         """
@@ -50,11 +57,11 @@ class OpenAIClient:
                 model=self.model,
                 messages=[
                     {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": user_prompt}
+                    {"role": "user", "content": user_prompt},
                 ],
                 max_tokens=max_tokens,
                 temperature=temperature,
-                request_timeout=self.timeout
+                request_timeout=self.timeout,
             )
 
             return response.choices[0].message.content.strip()
@@ -68,11 +75,14 @@ class OpenAIClient:
     # ---------------------------------------------------------
 
     def paraphrase_text(self, text: str, academic_style: bool = True) -> str:
-
         if not self.is_configured():
             return "OpenAI API key not configured"
 
-        style = "Maintain formal academic tone." if academic_style else "Use simple language."
+        style = (
+            "Maintain formal academic tone."
+            if academic_style
+            else "Use simple language."
+        )
 
         prompt = f"""
 Paraphrase the following text while preserving its meaning.
@@ -86,7 +96,7 @@ Text:
             return self._chat_request(
                 "You are an expert academic paraphrasing assistant.",
                 prompt,
-                temperature=0.7
+                temperature=0.7,
             )
         except Exception as e:
             return f"Error paraphrasing text: {e}"
@@ -96,7 +106,6 @@ Text:
     # ---------------------------------------------------------
 
     def improve_academic_writing(self, text: str) -> Dict[str, Any]:
-
         if not self.is_configured():
             return {"error": "OpenAI API key not configured"}
 
@@ -122,7 +131,7 @@ Text:
             result = self._chat_request(
                 "You are an academic editor returning structured JSON analysis.",
                 prompt,
-                temperature=0.3
+                temperature=0.3,
             )
 
             try:
@@ -138,8 +147,9 @@ Text:
     # Research Suggestions
     # ---------------------------------------------------------
 
-    def generate_research_suggestions(self, topic: str, field: str = "computer science") -> Dict[str, Any]:
-
+    def generate_research_suggestions(
+        self, topic: str, field: str = "computer science"
+    ) -> Dict[str, Any]:
         if not self.is_configured():
             return {"error": "OpenAI API key not configured"}
 
@@ -159,8 +169,7 @@ Return JSON:
 
         try:
             result = self._chat_request(
-                "You are an expert research advisor.",
-                prompt
+                "You are an expert research advisor.", prompt
             )
 
             try:
@@ -177,7 +186,6 @@ Return JSON:
     # ---------------------------------------------------------
 
     def check_plagiarism_risk(self, text: str) -> Dict[str, Any]:
-
         if not self.is_configured():
             return {"error": "OpenAI API key not configured"}
 
@@ -198,9 +206,7 @@ Text:
 
         try:
             result = self._chat_request(
-                "You are an academic integrity expert.",
-                prompt,
-                temperature=0.3
+                "You are an academic integrity expert.", prompt, temperature=0.3
             )
 
             try:
@@ -216,8 +222,9 @@ Text:
     # Citation Suggestions
     # ---------------------------------------------------------
 
-    def generate_citation_suggestions(self, text: str, citation_style: str = "APA") -> str:
-
+    def generate_citation_suggestions(
+        self, text: str, citation_style: str = "APA"
+    ) -> str:
         if not self.is_configured():
             return "OpenAI API key not configured"
 
@@ -233,7 +240,7 @@ Text:
         try:
             return self._chat_request(
                 f"You are an academic citation expert specialized in {citation_style} style.",
-                prompt
+                prompt,
             )
 
         except Exception as e:
@@ -245,8 +252,8 @@ Text:
 # Testing
 # ---------------------------------------------------------
 
-def test_openai():
 
+def test_openai():
     client = OpenAIClient()
 
     if not client.is_configured():

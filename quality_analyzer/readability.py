@@ -4,14 +4,18 @@ from typing import Dict, Optional, Any
 
 try:
     import spacy
+
     nlp: Optional[Any] = spacy.load("en_core_web_sm")
 except Exception:
-    logging.warning("spaCy model not found. Install with 'python -m spacy download en_core_web_sm'")
+    logging.warning(
+        "spaCy model not found. Install with 'python -m spacy download en_core_web_sm'"
+    )
     nlp = None
 
 try:
     import pyphen
-    dic = pyphen.Pyphen(lang='en')
+
+    dic = pyphen.Pyphen(lang="en")
 except Exception:
     logging.warning("pyphen not found. Install with 'pip install pyphen'")
     dic = None
@@ -21,7 +25,7 @@ class ReadabilityAnalyzer:
     def count_syllables(self, word: str) -> int:
         word = word.lower()
         if dic:
-            syllables = dic.inserted(word).split('-')
+            syllables = dic.inserted(word).split("-")
             return max(len(syllables), 1)
         else:
             # fallback simple heuristic
@@ -42,9 +46,9 @@ class ReadabilityAnalyzer:
                 doc = nlp(text)
                 sentences = [sent.text.strip() for sent in doc.sents if sent.text.strip()]
             else:
-                sentences = [s.strip() for s in re.split(r'[.!?]', text) if s.strip()]
+                sentences = [s.strip() for s in re.split(r"[.!?]", text) if s.strip()]
 
-            words = re.findall(r'\b\w+\b', text)
+            words = re.findall(r"\b\w+\b", text)
             sentence_count = len(sentences)
             word_count = len(words)
 
@@ -63,7 +67,10 @@ class ReadabilityAnalyzer:
             complex_words = [w for w in words if self.count_syllables(w) >= 3]
             GFI = 0.4 * (ASL + 100 * len(complex_words) / word_count)
             # SMOG Index
-            SMOG = 1.043 * (30 * len(complex_words) / max(sentence_count, 1))**0.5 + 3.1291
+            SMOG = (
+                1.043 * (30 * len(complex_words) / max(sentence_count, 1)) ** 0.5
+                + 3.1291
+            )
 
             return {
                 "sentences": sentence_count,
@@ -73,7 +80,7 @@ class ReadabilityAnalyzer:
                 "flesch_reading_ease": round(FRE, 2),
                 "flesch_kincaid_grade": round(FKGL, 2),
                 "gunning_fog_index": round(GFI, 2),
-                "smog_index": round(SMOG, 2)
+                "smog_index": round(SMOG, 2),
             }
         except Exception as e:
             logging.error(f"Readability analysis failed: {str(e)}")

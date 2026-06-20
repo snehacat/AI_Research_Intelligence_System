@@ -46,9 +46,11 @@ def analyze_structure(text: str) -> Dict[str, Any]:
     total_paragraphs = len(paragraphs)
 
     paragraph_lengths = [len(p.split()) for p in paragraphs if len(p.split()) > 0]
-    avg_paragraph_length = round(
-        sum(paragraph_lengths) / len(paragraph_lengths), 2
-    ) if paragraph_lengths else 0
+    avg_paragraph_length = (
+        round(sum(paragraph_lengths) / len(paragraph_lengths), 2)
+        if paragraph_lengths
+        else 0
+    )
 
     # Detect headings
     lines = [line.strip() for line in text.split("\n") if line.strip()]
@@ -73,9 +75,7 @@ def analyze_structure(text: str) -> Dict[str, Any]:
         "long_paragraphs": long_paragraphs,
         "headings_found": headings_found,
         "heading_coverage_percent": heading_coverage,
-        "missing_headings": [
-            h for h in COMMON_HEADINGS if h not in headings_found
-        ],
+        "missing_headings": [h for h in COMMON_HEADINGS if h not in headings_found],
     }
 
     return structure_report
