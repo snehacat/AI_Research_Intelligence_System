@@ -1,11 +1,5 @@
 # 🔍 Universal Truth Filter - Documentation
 
-## ✅ Restored and Enhanced!
-
-The Universal Truth Filter has been **restored** and **integrated** into the plagiarism detection system.
-
----
-
 ## 🎯 Purpose
 
 **Problem:** Plagiarism detectors flag common knowledge as plagiarism  
