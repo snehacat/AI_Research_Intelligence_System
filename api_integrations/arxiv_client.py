@@ -1,6 +1,6 @@
 """
 arXiv API Client - Free Research Paper Database Access
-Rate Limit: Unlimited (but be reasonable)
+Rate Limit: Unlimited 
 """
 
 import requests
