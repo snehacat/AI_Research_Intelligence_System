@@ -1,6 +1,6 @@
 import re
 from collections import Counter
-from typing import Dict, List
+from typing import Dict, List, Any
 import logging
 
 # List of common academic section headings
@@ -28,7 +28,7 @@ def normalize_heading(line: str) -> str:
     return line
 
 
-def analyze_structure(text: str) -> Dict[str, any]:
+def analyze_structure(text: str) -> Dict[str, Any]:
     """
     Analyze research paper structure:
     - Section coverage

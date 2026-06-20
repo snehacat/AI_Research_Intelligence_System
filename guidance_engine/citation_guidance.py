@@ -1,7 +1,7 @@
 # guidance_engine/citation_guidance.py
 import re
 import logging
-from typing import Dict, List
+from typing import Dict, List, Union
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -29,7 +29,7 @@ class CitationGuidance:
 
         self.sentence_split_pattern = r"[.!?]"
 
-    def analyze_text(self, text: str) -> Dict[str, int]:
+    def analyze_text(self, text: str) -> Dict[str, Union[int, float]]:
         """
         Analyze text for citation coverage.
         Returns:
@@ -57,7 +57,7 @@ class CitationGuidance:
                 "apa_citations": apa_citations,
                 "ieee_citations": ieee_citations,
                 "year_mentions": year_mentions,
-                "missing_ratio": missing_citations / max(len(long_sentences), 1)
+                "missing_ratio": float(missing_citations / max(len(long_sentences), 1))
             }
 
         except Exception as e:
@@ -69,20 +69,20 @@ class CitationGuidance:
                 "apa_citations": 0,
                 "ieee_citations": 0,
                 "year_mentions": 0,
-                "missing_ratio": 0
+                "missing_ratio": 0.0
             }
 
-    def generate_guidance(self, analysis: Dict[str, int]) -> List[str]:
+    def generate_guidance(self, analysis: Dict[str, Union[int, float]]) -> List[str]:
         """
         Generate specific, actionable citation guidance based on analysis.
         """
         guidance = []
         try:
-            missing_ratio = analysis.get("missing_ratio", 0)
-            missing_count = analysis.get("long_sentences_missing_citations", 0)
-            total_long = analysis.get("long_sentences", 1)
-            apa_count = analysis.get("apa_citations", 0)
-            ieee_count = analysis.get("ieee_citations", 0)
+            missing_ratio = float(analysis.get("missing_ratio", 0))
+            missing_count = int(analysis.get("long_sentences_missing_citations", 0))
+            total_long = int(analysis.get("long_sentences", 1))
+            apa_count = int(analysis.get("apa_citations", 0))
+            ieee_count = int(analysis.get("ieee_citations", 0))
             total_citations = apa_count + ieee_count
 
             # Overall citation assessment

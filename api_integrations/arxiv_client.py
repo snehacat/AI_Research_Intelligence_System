@@ -210,7 +210,7 @@ class ArxivClient:
 
     def _extract_arxiv_id(self, url: str) -> str:
 
-        match = re.search(r"arxiv\.org\/abs\/([\w\.\-]+)", url)
+        match = re.search(r"arxiv\.org\/abs\/(([\w\.\-]+))", url)
 
         if match:
 
@@ -279,8 +279,8 @@ class ArxivClient:
             if not papers:
                 return {"error": "No papers found"}
 
-            categories_count = {}
-            years_count = {}
+            categories_count: Dict[str, int] = {}
+            years_count: Dict[str, int] = {}
 
             for paper in papers:
 

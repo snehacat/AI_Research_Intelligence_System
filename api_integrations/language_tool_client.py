@@ -6,7 +6,7 @@ Used for grammar validation in AI Research Intelligence System
 import requests
 import logging
 import re
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 
 
 class LanguageToolClient:
@@ -35,7 +35,7 @@ class LanguageToolClient:
             "total_errors": 0
         }
 
-    def check_text(self, text: str, additional_rules: List[str] = None) -> Dict[str, Any]:
+    def check_text(self, text: str, additional_rules: Optional[List[str]] = None) -> Dict[str, Any]:
 
         if not text or not text.strip():
             return self._empty_result("Input text is empty")
@@ -65,7 +65,7 @@ class LanguageToolClient:
 
             corrections = []
             suggestions = []
-            error_types = {}
+            error_types: Dict[str, int] = {}
 
             for match in matches:
 

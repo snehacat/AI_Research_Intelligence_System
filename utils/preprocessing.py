@@ -4,7 +4,7 @@ caching, and comprehensive error handling.
 """
 import re
 import string
-from typing import List, Optional, Set, Dict
+from typing import List, Optional, Set, Dict, Union
 from functools import lru_cache
 from dataclasses import dataclass
 
@@ -326,7 +326,7 @@ class TextPreprocessor:
             logger.error(f"Sentence preprocessing error: {e}", exc_info=True)
             return [text]  # Return original as single sentence on error
     
-    def get_statistics(self, text: str) -> Dict[str, int]:
+    def get_statistics(self, text: str) -> Dict[str, Union[int, float]]:
         """
         Get text statistics.
         
@@ -344,8 +344,8 @@ class TextPreprocessor:
                 "character_count": len(text),
                 "word_count": len(words),
                 "sentence_count": len(sentences),
-                "avg_word_length": sum(len(w) for w in words) / len(words) if words else 0,
-                "avg_sentence_length": len(words) / len(sentences) if sentences else 0,
+                "avg_word_length": float(sum(len(w) for w in words) / len(words)) if words else 0.0,
+                "avg_sentence_length": float(len(words) / len(sentences)) if sentences else 0.0,
             }
         except Exception as e:
             logger.error(f"Statistics calculation error: {e}", exc_info=True)
@@ -353,8 +353,8 @@ class TextPreprocessor:
                 "character_count": len(text),
                 "word_count": 0,
                 "sentence_count": 0,
-                "avg_word_length": 0,
-                "avg_sentence_length": 0,
+                "avg_word_length": 0.0,
+                "avg_sentence_length": 0.0,
             }
 
 

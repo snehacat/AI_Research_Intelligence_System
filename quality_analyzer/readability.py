@@ -1,10 +1,10 @@
 import re
 import logging
-from typing import Dict
+from typing import Dict, Optional, Any
 
 try:
     import spacy
-    nlp = spacy.load("en_core_web_sm")
+    nlp: Optional[Any] = spacy.load("en_core_web_sm")
 except Exception:
     logging.warning("spaCy model not found. Install with 'python -m spacy download en_core_web_sm'")
     nlp = None
@@ -36,7 +36,7 @@ class ReadabilityAnalyzer:
                 count -= 1
             return max(count, 1)
 
-    def analyze(self, text: str) -> Dict[str, float]:
+    def analyze(self, text: str) -> Dict[str, Any]:
         try:
             if nlp:
                 doc = nlp(text)
