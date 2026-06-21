@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.cover
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# CI/CD
+.github/
+
+# Environment
+.env
+.env.*
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Cache
+.ruff_cache/
+.mypy_cache/
+.cache/
+
+# Models (download fresh in container)
+models/*
+!models/.gitkeep
+
+# Reports (will be generated)
+reports/generated_reports/*
+!reports/generated_reports/.gitkeep
+
+# Test files
+tests/
+pytest.ini
+
+# Docker files (don't copy into image)
+Dockerfile
+docker-compose.yml
+.dockerignore

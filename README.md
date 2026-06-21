@@ -494,6 +494,26 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Streamlit for the web framework
 - The open-source community
 
+## 🚀 Deployment
+
+### Quick Deploy (5 minutes)
+Deploy to **Streamlit Cloud** for FREE:
+1. Fork/Clone this repository
+2. Go to [share.streamlit.io](https://share.streamlit.io)
+3. Connect your GitHub account
+4. Select repository and set main file: `app/main.py`
+5. Click Deploy!
+
+**See [QUICK_DEPLOY.md](QUICK_DEPLOY.md) for detailed instructions**
+
+### Other Deployment Options
+- **Hugging Face Spaces** - ML-focused platform
+- **Railway.app** - Modern cloud platform
+- **Docker** - Containerized deployment (Dockerfile included)
+- **Render** - Free tier with auto-deploy
+
+**See [DEPLOYMENT.md](DEPLOYMENT.md) for all options**
+
 ## 📧 Support
 
 For issues, questions, or suggestions:

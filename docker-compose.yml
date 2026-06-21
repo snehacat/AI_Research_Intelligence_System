@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-research-intelligence
+    ports:
+      - "8501:8501"
+    environment:
+      # Optional API keys (can be set in .env file)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - SEMANTIC_SCHOLAR_API_KEY=${SEMANTIC_SCHOLAR_API_KEY:-}
+      - CROSSREF_API_KEY=${CROSSREF_API_KEY:-}
+      # App settings
+      - LOG_LEVEL=INFO
+      - DEFAULT_ANALYSIS_DEPTH=Standard
+      - ENABLE_API_CACHING=true
+    volumes:
+      # Persist generated reports
+      - ./reports:/app/reports
+      # Persist reference data
+      - ./data:/app/data
+      # Persist cached models
+      - ./models:/app/models
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  app-network:
+    driver: bridge
+
+# Optional: Add a reverse proxy (nginx) for production
+# services:
+#   nginx:
+#     image: nginx:alpine
+#     ports:
+#       - "80:80"
+#       - "443:443"
+#     volumes:
+#       - ./nginx.conf:/etc/nginx/nginx.conf
+#     depends_on:
+#       - app
+#     networks:
+#       - app-network

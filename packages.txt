@@ -1,0 +1,8 @@
+# System dependencies for Streamlit Cloud deployment
+# This file lists Ubuntu packages that need to be installed
+
+# For PDF processing
+poppler-utils
+
+# For better text processing
+libgomp1
