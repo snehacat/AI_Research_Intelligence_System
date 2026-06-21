@@ -6,6 +6,21 @@
 
 An industry-grade AI system for comprehensive research paper analysis, featuring multi-engine plagiarism detection, quality assessment, sentence-level analysis, and automated report generation. Built with modern NLP technologies including Rabin-Karp, TF-IDF, and Transformer models.
 
+## 🌐 Live Demo
+
+**🚀 Try the live application:** [AI Research Intelligence Pro on Streamlit](https://your-app-url.streamlit.app)
+
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://your-app-url.streamlit.app)
+
+**Features you can try:**
+- Upload PDF, DOCX, or TXT documents
+- Multi-engine plagiarism detection with risk assessment
+- Sentence-level analysis (Grammarly-style feedback)
+- Real-time quality scoring and metrics
+- Download professional PDF/DOCX reports
+
+> **Note:** Replace `your-app-url` with your actual Streamlit app URL
+
 ## 🚀 Quick Start
 
 ```bash
