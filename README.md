@@ -4,18 +4,31 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-An industry-grade AI system for comprehensive research paper analysis, featuring plagiarism detection, quality assessment, and academic guidance generation.
+An industry-grade AI system for comprehensive research paper analysis, featuring multi-engine plagiarism detection, quality assessment, sentence-level analysis, and automated report generation. Built with modern NLP technologies including Rabin-Karp, TF-IDF, and Transformer models.
 
 ## 🚀 Quick Start
 
 ```bash
-# 1. Install dependencies
+# 1. Clone the repository
+git clone <repository-url>
+cd AI_Research_Intelligence_System
+
+# 2. Create virtual environment
+python -m venv venv
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Linux/Mac
+
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 2. Run the application
+# 4. Download NLP models
+python -m spacy download en_core_web_sm
+python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('wordnet')"
+
+# 5. Run the application
 streamlit run app/main.py
 
-# 3. Open browser to http://localhost:8501
+# 6. Open browser to http://localhost:8501
 ```
 
 That's it! The app will start immediately.
@@ -24,28 +37,40 @@ That's it! The app will start immediately.
 
 ### Core Capabilities
 - **Multi-Engine Plagiarism Detection**
-  - Exact matching using Rabin-Karp algorithm
-  - Lexical similarity via TF-IDF analysis
-  - Semantic understanding with transformer models
-  - Universal truth filtering for common knowledge
+  - 🔍 Exact matching using Rabin-Karp rolling hash algorithm
+  - 📊 Lexical similarity via TF-IDF cosine similarity
+  - 🧠 Semantic understanding with Sentence-BERT transformer models
+  - ✅ Universal truth filtering for common knowledge
+  - ⚖️ Hybrid weighted scoring model (α, β, γ, δ)
 
 - **Research Quality Analysis**
-  - Academic tone assessment
-  - Citation validation and analysis
-  - Document structure evaluation
-  - Readability scoring
+  - 📝 Academic tone assessment and formality scoring
+  - 📚 Citation validation and completeness analysis
+  - 🏗️ Document structure evaluation (sections, flow, coherence)
+  - 📖 Readability scoring (Flesch-Kincaid, Gunning Fog)
+  - 🎯 Multi-dimensional quality metrics
+
+- **Sentence-Level Analysis** (Grammarly-style)
+  - 🔍 Individual sentence feedback
+  - ⚠️ Passive voice detection
+  - 👤 First-person usage warnings
+  - 📏 Sentence length analysis
+  - 📝 Informal language identification
+  - ✅ Real-time suggestions for improvement
 
 - **Intelligent Guidance System**
-  - Contextual improvement suggestions
-  - Academic writing recommendations
-  - Citation formatting guidance
-  - Structural enhancement advice
+  - 💡 Contextual improvement suggestions
+  - 🎓 Academic writing recommendations
+  - 📚 Citation formatting guidance
+  - 🏗️ Structural enhancement advice
+  - 🛣️ Personalized improvement roadmaps
 
-- **Comprehensive Reporting**
-  - Detailed plagiarism breakdowns
-  - Visual analytics and charts
-  - Section-wise analysis
-  - Exportable reports (PDF/HTML)
+- **Professional Report Generation**
+  - 📄 PDF reports with professional layouts
+  - 📝 Editable DOCX reports
+  - 📊 Visual analytics and interactive charts
+  - 📈 Executive summaries and metrics
+  - 💾 Downloadable in multiple formats
 
 ### 🔌 API Integrations (6 APIs)
 
@@ -61,15 +86,62 @@ That's it! The app will start immediately.
 
 **Note:** All APIs are FREE! No paid services required.
 
-## 🏗️ Architecture
+## 🏗️ Architecture & Program Flow
 
 ### Technology Stack
-- **UI Framework**: Streamlit
-- **NLP Processing**: spaCy, NLTK
-- **ML Models**: Sentence Transformers, Scikit-learn
-- **Document Processing**: PyPDF2, python-docx
-- **Visualization**: Plotly
-- **Configuration**: Pydantic Settings
+- **UI Framework**: Streamlit with multi-page navigation
+- **NLP Processing**: spaCy (3.8+), NLTK (3.9+)
+- **ML Models**: Sentence-BERT, Scikit-learn (1.8+)
+- **Document Processing**: PyPDF2 (3.0+), python-docx (1.2+)
+- **Report Generation**: ReportLab (4.0+) for PDF, python-docx for DOCX
+- **Visualization**: Plotly (6.6+) for interactive charts
+- **Configuration**: Pydantic Settings for type-safe configuration
+- **API Integration**: httpx, requests with retry logic
+
+### Program Flow
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    User Interface (Streamlit)                    │
+│                        app/main.py                               │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ├─► Dashboard (app/dashboard.py)
+                         │   └─► Document Upload & Full Analysis
+                         │       ├─► Text Extraction (utils/file_handler.py)
+                         │       ├─► Multi-Engine Plagiarism Detection
+                         │       │   ├─► Rabin-Karp (plagiarism_engine/rabin_karp.py)
+                         │       │   ├─► TF-IDF (plagiarism_engine/tfidf_engine.py)
+                         │       │   ├─► Semantic (plagiarism_engine/semantic_engine.py)
+                         │       │   └─► Universal Truth Filter (plagiarism_engine/universal_truth_filter.py)
+                         │       ├─► Quality Analysis
+                         │       │   ├─► Tone Checker (quality_analyzer/tone_checker.py)
+                         │       │   ├─► Citation Checker (quality_analyzer/citation_checker.py)
+                         │       │   ├─► Structure Analyzer (quality_analyzer/structure_analyzer.py)
+                         │       │   ├─► Readability (quality_analyzer/readability.py)
+                         │       │   └─► Scoring Engine (quality_analyzer/scoring_engine.py)
+                         │       ├─► Guidance Generation (guidance_engine/improvement_path.py)
+                         │       └─► Visual Analytics (Plotly charts)
+                         │
+                         ├─► Sentence Analysis (app/pages/sentence_analysis.py)
+                         │   └─► Sentence-level feedback (Grammarly-style)
+                         │       ├─► Passive voice detection
+                         │       ├─► Informal language identification
+                         │       ├─► First-person usage warnings
+                         │       └─► Sentence length analysis
+                         │
+                         ├─► Reports (app/pages/reports.py)
+                         │   └─► Professional report generation
+                         │       ├─► PDF generation (ReportLab)
+                         │       ├─► DOCX generation (python-docx)
+                         │       └─► Customizable sections
+                         │
+                         ├─► History (app/pages/history.py)
+                         │   └─► Analysis history tracking
+                         │
+                         └─► Settings (app/pages/settings.py)
+                             └─► Configuration management
+```
 
 ### Mathematical Model
 
@@ -80,12 +152,26 @@ P_i = (α × EMS_i) + (β × LSS_i) + (γ × SSS_i) + (δ × API_i)
 ```
 
 Where:
-- **EMS** (Exact Match Score): Rabin-Karp rolling hash
-- **LSS** (Lexical Similarity Score): TF-IDF cosine similarity
-- **SSS** (Semantic Similarity Score): Transformer embeddings
-- **API** (API-based Score): External API analysis
+- **EMS** (Exact Match Score): Rabin-Karp rolling hash with configurable window size
+- **LSS** (Lexical Similarity Score): TF-IDF cosine similarity with n-gram analysis
+- **SSS** (Semantic Similarity Score): Transformer embeddings (all-MiniLM-L6-v2)
+- **API** (API-based Score): External API analysis (Semantic Scholar, CrossRef, arXiv)
 
-Default weights: α=0.3, β=0.2, γ=0.3, δ=0.2
+Default weights (configurable in app/config.py): α=0.3, β=0.2, γ=0.3, δ=0.2
+
+### Data Flow
+
+1. **Input**: User uploads document (PDF/DOCX/TXT) through Dashboard
+2. **Extraction**: Text extracted with metadata preservation
+3. **Preprocessing**: Tokenization, normalization, sentence segmentation
+4. **Parallel Analysis**:
+   - Plagiarism engines run concurrently
+   - Quality analyzers evaluate different aspects
+   - API integrations fetch reference data
+5. **Scoring**: Hybrid model combines all scores with weighted averaging
+6. **Guidance**: AI generates personalized improvement suggestions
+7. **Visualization**: Interactive charts and metrics displayed
+8. **Output**: Results stored in session, exportable as PDF/DOCX reports
 
 ## 📦 Installation
 
@@ -175,27 +261,49 @@ All settings can be configured via environment variables or the `app/config.py` 
 
 ## 🚀 Usage
 
-### Web Interface
+### Web Interface Navigation
 
-1. **Upload Document**
-   - Supported formats: PDF, DOCX, TXT
-   - Maximum size: 50MB (configurable)
+The application features a professional multi-page interface:
 
-2. **Select Analysis Mode**
-   - Local Analysis: Uses local ML models
-   - API-Based Analysis: Leverages external APIs
-   - Hybrid Mode: Combines both approaches
+#### 1. **Dashboard** (Main Analysis)
+   - Upload document (PDF, DOCX, TXT - max 50MB)
+   - Automatic text extraction with preprocessing
+   - Real-time multi-engine analysis:
+     - Plagiarism detection with risk level indicators
+     - Quality scoring with interactive gauges
+     - Visual analytics with Plotly charts
+   - Smart AI recommendations with actionable steps
+   - Overall quality score (0-100)
 
-3. **Configure Options**
-   - Analysis depth
-   - Reference corpus
-   - Detection sensitivity
+#### 2. **Sentence Analysis** (Grammarly-style)
+   - Upload document for sentence-level feedback
+   - Individual sentence analysis with:
+     - Passive voice warnings
+     - Informal language detection
+     - First-person usage identification
+     - Sentence length recommendations
+   - Filter by: All / Issues Only / Clean Sentences
+   - Real-time suggestions for each sentence
 
-4. **Review Results**
-   - Plagiarism score and breakdown
-   - Quality metrics
-   - Improvement suggestions
-   - Visual analytics
+#### 3. **Reports**
+   - Generate professional reports from analyses
+   - Choose format: PDF (print-ready) or DOCX (editable)
+   - Customizable sections:
+     - Executive Summary
+     - Quality Metrics
+     - Recommendations
+   - One-click download with timestamp
+
+#### 4. **History**
+   - View past analyses
+   - Track improvements over time
+   - Access previous results
+
+#### 5. **Settings**
+   - Configure analysis parameters
+   - Manage API keys (optional)
+   - Adjust detection thresholds
+   - Customize weights and preferences
 
 ### Programmatic Usage
 
@@ -234,62 +342,78 @@ final_score = (
 AI_Research_Intelligence_System/
 │
 ├── app/                          # Application layer
-│   ├── main.py                   # Entry point
-│   ├── dashboard.py              # Local analysis UI
-│   ├── api_dashboard.py          # API-based analysis UI
-│   └── config.py                 # Configuration management
+│   ├── main.py                   # Entry point with multi-page navigation
+│   ├── dashboard.py              # Main analysis dashboard with visual analytics
+│   ├── config.py                 # Pydantic-based configuration management
+│   └── pages/                    # Multi-page application modules
+│       ├── sentence_analysis.py  # Sentence-level feedback (Grammarly-style)
+│       ├── reports.py            # PDF/DOCX report generation
+│       ├── history.py            # Analysis history tracking
+│       └── settings.py           # User preferences and configuration
 │
-├── plagiarism_engine/            # Plagiarism detection
-│   ├── rabin_karp.py            # Exact matching
-│   ├── tfidf_engine.py          # Lexical similarity
-│   ├── semantic_engine.py       # Semantic analysis
-│   └── universal_truth_filter.py # Common knowledge filter
+├── plagiarism_engine/            # Multi-engine plagiarism detection
+│   ├── rabin_karp.py            # Exact matching with rolling hash
+│   ├── tfidf_engine.py          # Lexical similarity with TF-IDF
+│   ├── semantic_engine.py       # Semantic analysis with Transformers
+│   └── universal_truth_filter.py # Common knowledge filtering
 │
-├── quality_analyzer/             # Quality assessment
-│   ├── tone_checker.py          # Academic tone analysis
-│   ├── citation_checker.py      # Citation validation
-│   ├── structure_analyzer.py    # Document structure
-│   ├── readability.py           # Readability metrics
-│   └── scoring_engine.py        # Unified scoring
+├── quality_analyzer/             # Multi-dimensional quality assessment
+│   ├── tone_checker.py          # Academic tone and formality analysis
+│   ├── citation_checker.py      # Citation validation and completeness
+│   ├── structure_analyzer.py    # Document structure and coherence
+│   ├── readability.py           # Readability metrics (Flesch-Kincaid, etc.)
+│   ├── scoring_engine.py        # Unified scoring system
+│   └── api_based_scoring_engine.py # API-enhanced scoring
 │
-├── guidance_engine/              # Guidance generation
-│   ├── plagiarism_guidance.py   # Plagiarism suggestions
-│   ├── tone_guidance.py         # Tone improvements
-│   ├── citation_guidance.py     # Citation fixes
-│   ├── structure_guidance.py    # Structure enhancements
-│   └── improvement_path.py      # Action plans
+├── guidance_engine/              # AI-powered guidance generation
+│   ├── plagiarism_guidance.py   # Plagiarism-specific suggestions
+│   ├── tone_guidance.py         # Tone improvement recommendations
+│   ├── citation_guidance.py     # Citation formatting guidance
+│   ├── structure_guidance.py    # Structure enhancement advice
+│   └── improvement_path.py      # Personalized improvement roadmaps
 │
-├── api_integrations/             # External APIs
-│   ├── openai_client.py         # OpenAI integration
-│   ├── semantic_scholar_client.py
-│   ├── crossref_client.py
-│   ├── arxiv_client.py
-│   ├── wikipedia_client.py
-│   └── language_tool_client.py
+├── api_integrations/             # External API clients with retry logic
+│   ├── openai_client.py         # OpenAI GPT integration (optional)
+│   ├── semantic_scholar_client.py # Academic paper search
+│   ├── crossref_client.py       # DOI validation and metadata
+│   ├── arxiv_client.py          # arXiv paper search
+│   ├── wikipedia_client.py      # Common knowledge validation
+│   └── language_tool_client.py  # Grammar and style checking
 │
-├── utils/                        # Utilities
-│   ├── preprocessing.py         # Text preprocessing
-│   ├── file_handler.py          # File I/O
-│   ├── logger.py                # Logging
-│   ├── exceptions.py            # Custom exceptions
-│   └── similarity_utils.py      # Similarity helpers
+├── utils/                        # Utility modules
+│   ├── preprocessing.py         # Text preprocessing and tokenization
+│   ├── file_handler.py          # Document I/O (PDF, DOCX, TXT)
+│   ├── logger.py                # Structured logging
+│   ├── exceptions.py            # Custom exception classes
+│   └── similarity_utils.py      # Similarity calculation helpers
 │
-├── data/                         # Data files
-│   ├── common_knowledge.json    # Universal truths
-│   ├── academic_replacement_words.json
-│   └── reference_corpus/        # Reference documents
+├── data/                         # Data files and knowledge bases
+│   ├── common_knowledge.json    # Universal truths database
+│   ├── academic_replacement_words.json # Academic vocabulary
+│   └── reference_corpus/        # Reference documents (optional)
 │
 ├── tests/                        # Test suite
-│   ├── test_plagiarism_engine/
-│   ├── test_quality_analyzer/
-│   └── test_utils/
+│   ├── test_plagiarism_engine/  # Plagiarism detection tests
+│   │   └── test_rabin_karp.py
+│   ├── test_quality_analyzer/   # Quality analysis tests
+│   └── test_utils/              # Utility tests
+│       └── test_preprocessing.py
 │
-├── reports/                      # Generated reports
-│   └── generated_reports/
+├── reports/                      # Generated reports directory
+│   └── generated_reports/       # Saved PDF/DOCX reports
 │
-├── requirements.txt              # Dependencies
-├── pyproject.toml               # Project configuration
-├── .env.example                 # Environment template
+├── models/                       # Cached ML models
+│
+├── .github/                      # GitHub configuration
+│   └── workflows/
+│       └── ci.yml               # CI/CD pipeline configuration
+│
+├── .streamlit/                   # Streamlit configuration
+│   └── config.toml              # App theme and settings
+│
+├── requirements.txt              # Python dependencies
+├── .env.example                 # Environment variables template
+├── .gitignore                   # Git ignore patterns
 └── README.md                    # This file
 ```
 

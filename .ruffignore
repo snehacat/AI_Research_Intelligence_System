@@ -1,0 +1,45 @@
+# Ruff ignore patterns
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Models and data
+models/
+*.pkl
+*.pt
+*.pth
+
+# Reports
+reports/generated_reports/
+
+# System
+.DS_Store
+Thumbs.db
